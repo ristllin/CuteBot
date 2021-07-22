@@ -2,14 +2,17 @@ import face_recognition
 import cv2
 import numpy as np
 
-# This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
-# other example, but it includes some basic performance tweaks to make things run a lot faster:
-#   1. Process each video frame at 1/4 resolution (though still display it at full resolution)
-#   2. Only detect faces in every other frame of video.
+#Source https://github.com/ageitgey/face_recognition/blob/master/examples/facerec_from_webcam_faster.py
 
-# PLEASE NOTE: This example requires OpenCV (the `cv2` library) to be installed only to read from your webcam.
-# OpenCV is not required to use the face_recognition library. It's only required if you want to run this
-# specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
+def moveto(top, right, bottom, left, frame):
+    tolerance = 25
+    height,width,_  = frame.shape  # float `width`
+    center_height = (top - (top - bottom)/2)
+    center_width = (right - (right - left)/2)
+    if (height/2) - tolerance > center_height: print("up")
+    elif (height/2) + tolerance < center_height: print("down")
+    if (width/2) - tolerance > center_width: print("right")
+    elif (width/2) + tolerance < center_width: print("left")
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -29,7 +32,7 @@ known_face_encodings = [
     target_encoding,
 ]
 known_face_names = [
-    "Roy",
+    "target",
 ]
 
 
@@ -43,7 +46,6 @@ while True:
     magnification_factor = 2
     # Resize frame of video to 1/4 size for faster face recognition processing
     small_frame = cv2.resize(frame, (0, 0), fx=1/magnification_factor, fy=1/magnification_factor)
-
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
     rgb_small_frame = small_frame[:, :, ::-1]
 
@@ -74,10 +76,11 @@ while True:
 
         # Draw a box around the face
         cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        if name == "target":
+            moveto(top, right, bottom, left, frame)
 
 
 
