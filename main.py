@@ -5,7 +5,7 @@ import numpy as np
 #Source https://github.com/ageitgey/face_recognition/blob/master/examples/facerec_from_webcam_faster.py
 
 def moveto(top, right, bottom, left, frame):
-    tolerance = 25
+    tolerance = 40
     height,width,_  = frame.shape  # float `width`
     center_height = (top - (top - bottom)/2)
     center_width = (right - (right - left)/2)
@@ -13,6 +13,7 @@ def moveto(top, right, bottom, left, frame):
     elif (height/2) + tolerance < center_height: print("down")
     if (width/2) - tolerance > center_width: print("right")
     elif (width/2) + tolerance < center_width: print("left")
+    else: print("good")
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
